@@ -5,6 +5,9 @@ import { getLocation } from '../utils/helpers'
 import SearchBar from '../components/SearchBar'
 import axios from 'axios'
 
+import { API_HOST } from '@env'
+
+
 import { Octicons, MaterialIcons } from '@expo/vector-icons';
 
 const initialLocation = {
@@ -19,6 +22,10 @@ const alfiler_medium = require('../images/icons/alfiler_96.png')
 const alfiler_large = require('../images/icons/alfiler.png')
 
 const Search = () => {
+  const serverURL = 'http://192.168.1.167:5051'
+  // const serverURL = 'http://10.10.0.147:5051'
+  // const serverURL = API_HOST
+
 
   const [searchActive, setSearchActive] = useState(false)
   const [location, setLocation] = useState(initialLocation) // debe de inician en la vivienda seleccionada
@@ -43,21 +50,6 @@ const Search = () => {
   ]
 
   const mapViewRef = useRef(null)
-
-  const getRecomendations = async () => {
-    await axios({
-      method: 'get',
-      url: 'http://192.168.100.25:5050/getHouses',
-      headers: {
-        actiontype: 'getHouses'
-      }
-    })
-      .then(response => {
-        setHousesData(response.data)
-      })
-      .catch(err => console.log(err))
-  }
-
   useEffect(() => {
     miLocation()
     getRecomendations()
@@ -70,6 +62,20 @@ const Search = () => {
       }
     }, 800);
   }, [position])
+
+  const getRecomendations = async () => {
+    await axios({
+      method: 'get',
+      url: `${ serverURL }/getHouses`,
+      headers: {
+        actiontype: 'getHouses'
+      }
+    })
+      .then(response => {
+        setHousesData(response.data)
+      })
+      .catch(err => console.log(err))
+  }
 
   const miLocation = async () => {
     await getLocation()
@@ -132,17 +138,16 @@ const Search = () => {
           </Text>
         </View>
         <View
-          style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}
+          style={{ width: '100%', justifyContent: 'center', alignItems: 'center', paddingBottom: 10 }}
           onPress={() => {
             console.log('mePresionaste')
           }}
         >
           <SearchBar
+            searchActive={ searchActive }
             setSearchActive={setSearchActive}
+            housesData= { housesData }
           />
-        </View>
-        <View style={{ height: 'auto', display: searchActive ? 'flex' : 'none' }}>
-          <Text>List</Text>
         </View>
       </View>
 

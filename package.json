@@ -16,7 +16,6 @@
     "axios": "^1.6.5",
     "expo": "~49.0.15",
     "expo-blur": "~12.4.1",
-    "expo-cli": "^6.3.10",
     "expo-location": "~16.1.0",
     "expo-permissions": "~14.2.1",
     "expo-status-bar": "~1.6.0",
@@ -28,7 +27,8 @@
     "react-native-svg": "13.9.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "react-native-dotenv": "^3.4.9"
   },
   "private": true
 }
