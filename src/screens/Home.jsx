@@ -22,9 +22,7 @@ const Home = () => {
   const [likeActive, setLikeActive] = useState(false)
   const [searchActive, setSearchActive] = useState(false)
 
-  const serverURL = 'http://192.168.1.167:5051'
-  // const serverURL = 'http://192.168.100.19:5051'
-  // const serverURL = API_HOST
+  const serverURL = API_HOST
 
   const background = require('../images/appBackground.jpg')
 
@@ -103,14 +101,20 @@ const Home = () => {
                 </Pressable>
               </View>
             </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: 90, paddingHorizontal: 5 }} >
+
+            <View
+              style={{ width: '100%', height: searchActive ? '80%' : 70, justifyContent: 'flex-start', alignItems: 'center', paddingBottom: 10, marginTop: 10 }}
+              onPress={() => {
+                console.log('mePresionaste')
+              }}
+            >
               <SearchBar
-                searchActive={ searchActive }
-                setSearchActive={setSearchActive} 
-                housesData= { housesData }
+                searchActive={searchActive}
+                setSearchActive={setSearchActive}
+                housesData={housesData}
               />
             </View>
-            
+
             <View style={searchActive ? { display: 'none' } : { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', width: '100%', height: '20%' }} >
               {
                 optionButtoms.map((item, index) => (

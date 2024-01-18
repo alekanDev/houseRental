@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable, ScrollView, Image, Animated } from 'react-native'
+import { StyleSheet, View, Text, Pressable, Image, Animated } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { getLocation } from '../utils/helpers'
@@ -22,9 +22,7 @@ const alfiler_medium = require('../images/icons/alfiler_96.png')
 const alfiler_large = require('../images/icons/alfiler.png')
 
 const Search = () => {
-  const serverURL = 'http://192.168.1.167:5051'
-  // const serverURL = 'http://10.10.0.147:5051'
-  // const serverURL = API_HOST
+  const serverURL = API_HOST
 
 
   const [searchActive, setSearchActive] = useState(false)
@@ -130,15 +128,15 @@ const Search = () => {
 
       </MapView>
 
-      <View style={{ width: '95%', height: searchActive ? 'auto' : 120, backgroundColor: 'rgba(0,0,0,0.7)', borderRadius: 15, padding: 10, alignSelf: 'center', position: 'absolute', top: 50, justifyContent: searchActive ? 'flex-start' : 'space-around' }} >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }} >
+      <View style={{ width: '95%', height: searchActive ? '90%' : 120, backgroundColor: 'rgba(0,0,0,0.7)', borderRadius: 15, padding: 10, alignSelf: 'center', position: 'absolute', top: 50, justifyContent: searchActive ? 'flex-start' : 'space-around' }} >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 50 }} >
           <Octicons name="location" size={25} color="#CDDB30" />
           <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }} >
             {reverseCode.city}, {reverseCode.region}
           </Text>
         </View>
         <View
-          style={{ width: '100%', justifyContent: 'center', alignItems: 'center', paddingBottom: 10 }}
+          style={{ width: '100%', height: searchActive? '90%' : 70, justifyContent: 'flex-start', alignItems: 'center', paddingBottom: 10, marginTop: 10 }}
           onPress={() => {
             console.log('mePresionaste')
           }}
