@@ -13,11 +13,16 @@ import apartmentIcon from '../images/icons/apartmentIcon.png'
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { getLocation } from '../utils/helpers'
 
+import { API_HOST } from '@env'
+
 const Home = () => {
 
   const [housesData, setHousesData] = useState([{ saludo: 'hola' }])
   const [currentLocation, setCurrentLocation] = useState({})
   const [likeActive, setLikeActive] = useState(false)
+  const [searchActive, setSearchActive] = useState(false)
+
+  const serverURL = API_HOST
 
   const background = require('../images/appBackground.jpg')
 
@@ -37,22 +42,21 @@ const Home = () => {
     myLocation()
     getRecomendations()
   }, [])
-  
-  const myLocation = async() => {
+
+  const myLocation = async () => {
     await getLocation()
-   .then(data => {
-    // console.log(data.reverseGeocode[0])
-     setCurrentLocation(data.reverseGeocode[0])
-   })
-   .catch(err => {
-     console.log(err)
-   })
- }  
+      .then(data => {
+        setCurrentLocation(data.reverseGeocode[0])
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   const getRecomendations = async () => {
     await axios({
       method: 'get',
-      url: 'http://192.168.100.25:5050/getHouses',
+      url: `${serverURL}/getHouses`,
       headers: {
         actiontype: 'getHouses'
       }
@@ -62,101 +66,112 @@ const Home = () => {
       })
       .catch(err => console.log(err))
   }
- 
-  
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
 
-    <ImageBackground style={{ flex: 1, position: 'relative', height: '100%' }} source={background} >
-      <BlurView intensity={5} style={{ flex: 1 }} >
+      <ImageBackground style={{ flex: 1, position: 'relative', height: '100%' }} source={background} >
+        <BlurView intensity={5} style={{ flex: 1 }} >
 
-        <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.4)', flex: 1, paddingVertical: 20 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: '10%', alignItems: 'center', paddingHorizontal: 15 }} >
-            <View>
-              <View style={{ alignItems: 'center', flexDirection: 'row' }} >
-                <Text style={{ fontSize: 16, color: 'white' }} >Ubicación</Text>
-                <MaterialIcons name="keyboard-arrow-down" size={24} color="white" />
+          <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.4)', flex: 1, paddingVertical: 20 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 90, alignItems: 'center', paddingHorizontal: 15 }} >
+              <View>
+                <View style={{ alignItems: 'center', flexDirection: 'row' }} >
+                  <Text style={{ fontSize: 16, color: 'white' }} >Ubicación</Text>
+                  <MaterialIcons name="keyboard-arrow-down" size={24} color="white" />
+                </View>
+                <View style={{ alignItems: 'center', flexDirection: 'row' }} >
+                  <Octicons name="location" size={25} color="#CDDB30" />
+                  <Text style={{ fontSize: 18, marginLeft: 10, color: 'white', fontWeight: 'bold' }} >
+                    {currentLocation.city}, {currentLocation.region}
+                  </Text>
+                </View>
               </View>
-              <View style={{ alignItems: 'center', flexDirection: 'row' }} >
-                <Octicons name="location" size={25} color="#CDDB30" />
-                <Text style={{ fontSize: 18, marginLeft: 10, color: 'white', fontWeight: 'bold' }} >
-                  { currentLocation.city }, { currentLocation.region }
-                </Text>
-              </View>
-            </View>
-            <View style={{ justifyContent: 'center' }}>
-              <Pressable
-                style={{ backgroundColor: '#2c2c2c', borderRadius: 50, padding: 7 }}
-                onPress={() => {
-                  console.log('notificationsList')
-                }} >
-                <MaterialIcons name="notifications" size={35} color="white" />
-              </Pressable>
-            </View>
-          </View>
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '15%', paddingHorizontal: 5 }} >
-            <SearchBar />
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', width: '100%', height: '20%' }} >
-            {
-              optionButtoms.map((item, index) => (
-                <Pressable key={index} style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 100, width: 100, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => { console.log(item.name) }} >
-                  <Image source={selectIcon(item.name)} style={{ width: 50, height: 50 }} />
-                  <Text style={{ fontSize: 14, color: 'white', fontWeight: 'bold' }} >{item.title}</Text>
+              <View style={{ justifyContent: 'center' }}>
+                <Pressable
+                  style={{ backgroundColor: '#2c2c2c', borderRadius: 50, padding: 7 }}
+                  onPress={() => {
+                    console.log('notificationsList')
+                  }} >
+                  <MaterialIcons name="notifications" size={35} color="white" />
                 </Pressable>
-              ))
-            }
-          </View>
-          <View style={{ height: '70%', width: '100%', paddingTop: 50 }}>
-            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', width: '100%', height: '5%', alignSelf: 'flex-end', paddingHorizontal: 10 }} >Recomendaciones</Text>
+              </View>
+            </View>
 
-            <ScrollView
-              horizontal={true}
-              contentContainerStyle={{ width: 'auto', padding: 5, gap: 10 }}
+            <View
+              style={{ width: '100%', height: searchActive ? '80%' : 70, justifyContent: 'flex-start', alignItems: 'center', paddingBottom: 10, marginTop: 10 }}
+              onPress={() => {
+                console.log('mePresionaste')
+              }}
             >
-              {
-                housesData.map((item, index) => (
-                  <View key={ index } style={{ width: 'auto', height: '95%' }} >
-                    <View style={{ width: 230, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 25, padding: 10, gap: 5 }} >
-                      <Image
+              <SearchBar
+                searchActive={searchActive}
+                setSearchActive={setSearchActive}
+                housesData={housesData}
+              />
+            </View>
 
-                        style={{ width: '100%', height: '50%', alignSelf: 'center', borderRadius: 15, marginBottom: 10 }}
-                      />
-                      <Text style={{ color: '#CDDB30', fontWeight: 'bold', fontSize: 10 }}>
-                        { item.type }
-                      </Text>
-                      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 14 }}>Unidad del metro</Text>
-                      <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5 }} >
-                        <Octicons name="location" size={14} color="#CDDB30" />
-                        <Text style={{ fontSize: 10, color: 'white', fontWeight: 'bold' }} >{ item.city }, { item.state}</Text>
-                      </View>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
-                        <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, alignItems: 'flex-end' }} >
-                          <Text style={{ fontSize: 22, color: '#CDDB30', fontWeight: 'bold' }} >
-                            { item.price }
-                          </Text>
-                          <Text style={{ color: 'white', fontSize: 12 }}> /mes</Text>
-                        </View>
-                        <Pressable onPress={() => {
-                          setLikeActive(!likeActive)
-                        }}>
-                          <MaterialIcons name="favorite-outline" size={35} color={likeActive ? '#CDDB30' : 'white'} />
-                        </Pressable>
-                      </View>
-                    </View>
-                  </View>
+            <View style={searchActive ? { display: 'none' } : { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', width: '100%', height: '20%' }} >
+              {
+                optionButtoms.map((item, index) => (
+                  <Pressable key={index} style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 100, width: 100, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => { console.log(item.name) }} >
+                    <Image source={selectIcon(item.name)} style={{ width: 50, height: 50 }} />
+                    <Text style={{ fontSize: 14, color: 'white', fontWeight: 'bold' }} >{item.title}</Text>
+                  </Pressable>
                 ))
               }
-            </ScrollView>
+            </View>
+            <View style={searchActive ? { display: 'none' } : { height: '70%', width: '100%', paddingTop: 50 }}>
+              <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', width: '100%', height: '5%', alignSelf: 'flex-end', paddingHorizontal: 10 }} >Recomendaciones</Text>
 
-          </View>
-        </SafeAreaView>
+              <ScrollView
+                horizontal={true}
+                contentContainerStyle={{ width: 'auto', padding: 5, gap: 10 }}
+              >
+                {
+                  housesData.map((item, index) => (
+                    <View key={index} style={{ width: 'auto', height: '95%' }} >
+                      <View style={{ width: 230, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 25, padding: 10, gap: 5 }} >
+                        <Image
 
-      </BlurView>
-    </ImageBackground>
+                          style={{ width: '100%', height: '50%', alignSelf: 'center', borderRadius: 15, marginBottom: 10 }}
+                        />
+                        <Text style={{ color: '#CDDB30', fontWeight: 'bold', fontSize: 10 }}>
+                          {item.type}
+                        </Text>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 14 }}>Unidad del metro</Text>
+                        <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5 }} >
+                          <Octicons name="location" size={14} color="#CDDB30" />
+                          <Text style={{ fontSize: 10, color: 'white', fontWeight: 'bold' }} >{item.city}, {item.state}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
+                          <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, alignItems: 'flex-end' }} >
+                            <Text style={{ fontSize: 22, color: '#CDDB30', fontWeight: 'bold' }} >
+                              {item.price}
+                            </Text>
+                            <Text style={{ color: 'white', fontSize: 12 }}> /mes</Text>
+                          </View>
+                          <Pressable onPress={() => {
+                            setLikeActive(!likeActive)
+                          }}>
+                            <MaterialIcons name="favorite-outline" size={35} color={likeActive ? '#CDDB30' : 'white'} />
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  ))
+                }
+              </ScrollView>
+
+            </View>
+          </SafeAreaView>
+
+        </BlurView>
+      </ImageBackground>
     </KeyboardAvoidingView>
 
   )

@@ -1,9 +1,12 @@
-import { StyleSheet, View, Text, Pressable, ScrollView, Image, Animated } from 'react-native'
+import { StyleSheet, View, Text, Pressable, Image, Animated } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { getLocation } from '../utils/helpers'
 import SearchBar from '../components/SearchBar'
 import axios from 'axios'
+
+import { API_HOST } from '@env'
+
 
 import { Octicons, MaterialIcons } from '@expo/vector-icons';
 
@@ -19,6 +22,8 @@ const alfiler_medium = require('../images/icons/alfiler_96.png')
 const alfiler_large = require('../images/icons/alfiler.png')
 
 const Search = () => {
+  const serverURL = API_HOST
+
 
   const [searchActive, setSearchActive] = useState(false)
   const [location, setLocation] = useState(initialLocation) // debe de inician en la vivienda seleccionada
@@ -43,21 +48,6 @@ const Search = () => {
   ]
 
   const mapViewRef = useRef(null)
-
-  const getRecomendations = async () => {
-    await axios({
-      method: 'get',
-      url: 'http://192.168.100.25:5050/getHouses',
-      headers: {
-        actiontype: 'getHouses'
-      }
-    })
-      .then(response => {
-        setHousesData(response.data)
-      })
-      .catch(err => console.log(err))
-  }
-
   useEffect(() => {
     miLocation()
     getRecomendations()
@@ -70,6 +60,20 @@ const Search = () => {
       }
     }, 800);
   }, [position])
+
+  const getRecomendations = async () => {
+    await axios({
+      method: 'get',
+      url: `${ serverURL }/getHouses`,
+      headers: {
+        actiontype: 'getHouses'
+      }
+    })
+      .then(response => {
+        setHousesData(response.data)
+      })
+      .catch(err => console.log(err))
+  }
 
   const miLocation = async () => {
     await getLocation()
@@ -124,25 +128,24 @@ const Search = () => {
 
       </MapView>
 
-      <View style={{ width: '95%', height: searchActive ? 'auto' : 120, backgroundColor: 'rgba(0,0,0,0.7)', borderRadius: 15, padding: 10, alignSelf: 'center', position: 'absolute', top: 50, justifyContent: searchActive ? 'flex-start' : 'space-around' }} >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }} >
+      <View style={{ width: '95%', height: searchActive ? '90%' : 120, backgroundColor: 'rgba(0,0,0,0.7)', borderRadius: 15, padding: 10, alignSelf: 'center', position: 'absolute', top: 50, justifyContent: searchActive ? 'flex-start' : 'space-around' }} >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 50 }} >
           <Octicons name="location" size={25} color="#CDDB30" />
           <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }} >
             {reverseCode.city}, {reverseCode.region}
           </Text>
         </View>
         <View
-          style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}
+          style={{ width: '100%', height: searchActive? '90%' : 70, justifyContent: 'flex-start', alignItems: 'center', paddingBottom: 10, marginTop: 10 }}
           onPress={() => {
             console.log('mePresionaste')
           }}
         >
           <SearchBar
+            searchActive={ searchActive }
             setSearchActive={setSearchActive}
+            housesData= { housesData }
           />
-        </View>
-        <View style={{ height: 'auto', display: searchActive ? 'flex' : 'none' }}>
-          <Text>List</Text>
         </View>
       </View>
 

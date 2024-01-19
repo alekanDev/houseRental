@@ -17,7 +17,7 @@ export const getLocation = async () => {
       longitude: location.coords.longitude
     })
 
-    console.log(reverseGeocode)
+    // console.log(reverseGeocode)
 
     const position = {
       latitude: location.coords.latitude,
