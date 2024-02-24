@@ -22,7 +22,8 @@ const Home = () => {
   const [likeActive, setLikeActive] = useState(false)
   const [searchActive, setSearchActive] = useState(false)
 
-  const serverURL = API_HOST
+  const serverURL = 'http://192.168.100.29:5051'
+  
 
   const background = require('../images/appBackground.jpg')
 

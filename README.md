@@ -16,8 +16,8 @@ houseRental es una aplicación innovadora de alquiler de viviendas que simplific
 
 ## Instalación
 1. Clona el repositorio: `git clone https://github.com/alekanDev/houseRental.git`
-2. Instala las dependencias: `npm install`
-3. Inicia la aplicación: `npm start`
+2. Instala las dependencias: `yarn install`
+3. Inicia la aplicación: `yarn expo start`
    
 **NOTA:** Antes de iniciar el front tener en cuenta haber realizado el proceso del back y asi tener completamente funcional la plataforma.
 

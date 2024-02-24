@@ -22,7 +22,7 @@ const alfiler_medium = require('../images/icons/alfiler_96.png')
 const alfiler_large = require('../images/icons/alfiler.png')
 
 const Search = () => {
-  const serverURL = API_HOST
+  const serverURL = 'http://192.168.100.29:5051'
 
 
   const [searchActive, setSearchActive] = useState(false)
@@ -115,7 +115,7 @@ const Search = () => {
           e.latitudeDelta >= 0.02 ? setAlfiler(alfiler_small) : setAlfiler(alfiler_medium)
           // mapViewRef.current?.animateToRegion(location, 1000)
         }}
-        showsUserLocation={true}
+        showsUserLocation={false}
       >
         {
           myMarkers.map((item, index) => (
