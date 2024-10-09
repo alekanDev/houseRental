@@ -22,7 +22,7 @@ const Home = () => {
   const [likeActive, setLikeActive] = useState(false)
   const [searchActive, setSearchActive] = useState(false)
 
-  const serverURL = 'http://192.168.100.29:5051'
+  const serverURL = 'http://192.168.100.8:5051'
   
 
   const background = require('../images/appBackground.jpg')
@@ -71,7 +71,7 @@ const Home = () => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
 

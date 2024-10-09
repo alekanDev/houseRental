@@ -22,8 +22,7 @@ const alfiler_medium = require('../images/icons/alfiler_96.png')
 const alfiler_large = require('../images/icons/alfiler.png')
 
 const Search = () => {
-  const serverURL = 'http://192.168.100.29:5051'
-
+  const serverURL = 'http://192.168.100.8:5051'
 
   const [searchActive, setSearchActive] = useState(false)
   const [location, setLocation] = useState(initialLocation) // debe de inician en la vivienda seleccionada
@@ -98,7 +97,6 @@ const Search = () => {
       />
     )
   }
-
 
   return (
     <View style={{ flex: 1 }}>
